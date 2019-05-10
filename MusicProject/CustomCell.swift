@@ -17,6 +17,8 @@ class CustomCell: UITableViewCell {
     @IBOutlet weak var imageAlbum: UIImageView!
     @IBOutlet weak var favoritesButton: UIButton!
     
+  
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -27,5 +29,6 @@ class CustomCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    
 }

@@ -8,22 +8,20 @@
 
 import UIKit
 
-class FavoriteVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+/*protocol UpdateSelected: class {
+    func updateArray(array: Array<Int>)
+}*/
+
+class FavoriteVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var favoriteSong: [Album] = []
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
         self.tableView.reloadData()
-        
-        // Do any additional setup after loading the view.
-    }
-    
-    @IBAction func closePopup(_ sender: Any) {
-        dismiss(animated: true)
     }
     
     
@@ -37,7 +35,10 @@ class FavoriteVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let albumFav = favoriteSong[indexPath.row]
         
         cell.deleteFav.tag = indexPath.row
+        
         cell.deleteFav.addTarget(self, action: #selector(deleteFav(sender:)) , for: .touchUpInside)
+        
+        
         
         cell.album.text = albumFav.albumName
         cell.artist.text = albumFav.artisteName
@@ -52,5 +53,9 @@ class FavoriteVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @objc func deleteFav(sender:UIButton) {
         favoriteSong.remove(at: sender.tag)
         self.tableView.reloadData()
+    }
+    
+    @IBAction func closePopup(_ sender: Any) {
+        dismiss(animated: true)
     }
 }

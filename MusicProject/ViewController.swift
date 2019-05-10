@@ -12,11 +12,16 @@ import SwiftyJSON
 import AVFoundation
 
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
-
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate{
+    
+    
     var albums:[Album] = []
     
     var favAlbum:[Album] = []
+    
+    var selected = [Int]()
+    
+    
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var artistSearch: UITextField!
@@ -107,23 +112,33 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         cell.favoritesButton.tag = indexPath.row
         cell.favoritesButton.addTarget(self, action: #selector(addFav(sender:)) , for: .touchUpInside)
-
-            let album = albums[indexPath.row]
-            
-            cell.album.text = album.albumName
-            cell.artist.text = album.artisteName
-            cell.song.text = album.titleName
-            let urlImg = URL(string: album.imageAlbum)
-            let dataImg = try? Data(contentsOf: urlImg!)
-            cell.imageAlbum.image = UIImage(data : dataImg!)
-            
-            return cell
+        
+        cell.favoritesButton.isSelected = false
+        
+        for i in selected{
+            print(i)
+            if i == cell.favoritesButton.tag{
+                cell.favoritesButton.isSelected = true
+            }
+        }
+        
+        
+        let album = albums[indexPath.row]
+        
+        cell.album.text = album.albumName
+        cell.artist.text = album.artisteName
+        cell.song.text = album.titleName
+        let urlImg = URL(string: album.imageAlbum)
+        let dataImg = try? Data(contentsOf: urlImg!)
+        cell.imageAlbum.image = UIImage(data : dataImg!)
+        
+        return cell
     }
+
+    
+    
     
     @objc func addFav(sender:UIButton) {
-        
-        print(sender)
-        
         if sender.isSelected {
             sender.isSelected = false
             var favIndex = 0
@@ -135,10 +150,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 favIndex += 1
             }
             favAlbum.remove(at: favIndex)
+            self.selected.remove(at: favIndex)
         }
         else {
             sender.isSelected = true
             favAlbum.append(albums[sender.tag])
+            if !self.selected.contains(sender.tag){
+                self.selected.append(sender.tag)
+            }
         }
    }
     
@@ -147,6 +166,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         performSegue(withIdentifier: "listenSong", sender: self)
         
     }
+    
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "listenSong"{
